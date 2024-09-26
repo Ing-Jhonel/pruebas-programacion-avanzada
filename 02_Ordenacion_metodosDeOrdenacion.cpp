@@ -162,37 +162,80 @@ void MetodoDirectoInsercionDirecta(double a[], int n){
 
 void metodoLogaritmicoShellSort(double a[], int n){
 	
-	int k=n+1;
+	int k=n;
 	while(k>1){
-		k=n/2;
+		k=k/2;
 		int cen=1;
-		while(cen=1){
+		while(cen==1){
 			cen=0;
-			int i=1;
-			while(i+k<=n){
-				if(a[i+k]<a[i]){
-					int aux=a[i];
+			int i=0;
+			while(i+k < n){
+				if(a[i+k] < a[i]){
+					double aux=a[i];
 					a[i]=a[i+k];
 					a[i+k]=aux;
-					cen = 1;
+					cen=1;
 				}
 				i++;
 			}
 		}
 	}
 }
+
+
+void reduce(double a[], int inicio, int final){
+	
+	int izq=inicio;
+	int der=final;
+	int pos=izq;
+	int cen=1;
+	
+	while(cen==1){
+		cen=0;
+		//recorrido de derecha a izquierda
+		while(a[pos]<=a[der] && pos!=der){
+			der--;
+		}
+		if(pos!=der){
+			double aux=a[pos];
+			a[pos]=a[der];
+			a[der]=aux;
+			pos=der;
+			//recorrido de izquierda a derecha
+			while(a[pos]>=a[izq] && pos!=izq){
+				izq++;
+			}
+			if(pos!=izq){
+				double aux=a[pos];
+				a[pos]=a[izq];
+				a[izq]=aux;
+				pos=izq;
+				cen=1;
+			}
+		}
+		if(pos-1 > inicio){
+			//llamado recursivo a Quicksort para el subarreglo izquierdo
+			reduce(a, inicio, pos-1);
+		}
+		if(pos+1 < final){
+			//llamado recursivo a Quicksort para el subarreglo derecho
+			reduce(a, pos+1, final);
+		}
+	}
+}
+
+void metodoLogaritmicoQuickSort(double a[], int n){
+	reduce(a, 0, n-1);
+}
+
 int main(){
 	
-	int tamanio;
-	cout << "Indique la cantidad de indices del arreglo: ";
-	cin >> tamanio;
-	double arregloOriginal[tamanio];
+	double arregloOriginal[]={8,4,9,1,5,0};
+	int tamanio=sizeof(arregloOriginal)/sizeof(arregloOriginal[0]);
 	double arregloCopia[tamanio];
-	cout << endl << endl << "Ingrese el valor de cada indice: " << endl << endl;
+	
 	for(int i=0; i<tamanio; i++){
-		cout << i << ". indice: ";
-		cin >> arregloOriginal[i];
-		arregloCopia[i] = arregloOriginal[i];
+		arregloCopia[i]=arregloOriginal[i];
 	}
 	
 	cout << endl << endl << "\t";
@@ -208,11 +251,11 @@ int main(){
 		cout << "3. Salir" << endl << endl;
 		cin >> opcion;
 		
+		system("cls");
 		switch(opcion){
 			case '1':
 				do{
 					bool mostrarPasos=true;
-					system("cls");
 					cout << endl << "Elige un metodo directo" << endl << endl;
 					cout << "A) Ordenacion por intercambio directo" << endl;
 					cout << "B) Ordenacion por seleccion directa" << endl;
@@ -224,8 +267,7 @@ int main(){
 					switch(opcion){
 						case 'A':
 							do{
-								mostrarPasos=true;
-								system("cls");	
+								mostrarPasos=true;	
 								cout << "Elige que tipo de intercambio directo" << endl << endl;
 								cout << "a) Intercambio directo por la derecha" << endl;
 								cout << "b) Intercambio directo por la izquierda" << endl;
@@ -305,7 +347,7 @@ int main(){
 				break;
 			case '2':
 				do{
-					mostrarPasos = true;
+					bool mostrarPasos = true;
 					system("cls");
 					cout << endl << "Elige un metodo logaritmico" << endl << endl;
 					cout << "a) Metodo de Shell" << endl;
@@ -324,6 +366,7 @@ int main(){
 							metodoLogaritmicoShellSort(arregloCopia, tamanio);
 							break;
 						case 'b':
+							metodoLogaritmicoQuickSort(arregloCopia, tamanio);
 							break;
 						case 'c':
 							mostrarPasos = false;
@@ -340,6 +383,7 @@ int main(){
 						cout << endl << endl;
 						change(arregloCopia, arregloOriginal, tamanio);
 					}
+					system("pause");
 				} while(opcion != 'c');
 				break;
 			case '3':

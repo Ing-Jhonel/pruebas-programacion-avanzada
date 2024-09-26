@@ -130,6 +130,57 @@ void intercambioDirectoBidireccional(double a[], int n) { //va de izquierda a dr
     } while (inicio <= fin);
 }
 
+void MetodoDirectoSeleccionDirecta(double a[], int n){
+	
+	for(int i=0; i<n-1; i++){
+		int menor = a[i];
+		int k = i;
+		for(int j=i+1; j<n; j++){
+			if(menor > a[j]){
+				menor = a[j];
+				k = j;
+			}
+		}
+		a[k] = a[i];
+		a[i] = menor;
+	}
+}
+
+void MetodoDirectoInsercionDirecta(double a[], int n){
+	
+	for(int i=1; i<n; i++){
+		int aux = a[i];
+		int k = i-1;
+		
+		while(k>=0 && aux < a[k]){
+			a[k+1] = a[k];
+			k--;
+		}
+		a[k+1] = aux;
+	}
+}
+
+void metodoLogaritmicoShellSort(double a[], int n){
+	
+	int k=n+1;
+	while(k>1){
+		k=n/2;
+		int cen=1;
+		while(cen=1){
+			cen=0;
+			int i=1;
+			while(i+k<=n){
+				if(a[i+k]<a[i]){
+					int aux=a[i];
+					a[i]=a[i+k];
+					a[i+k]=aux;
+					cen = 1;
+				}
+				i++;
+			}
+		}
+	}
+}
 int main(){
 	
 	int tamanio;
@@ -150,6 +201,7 @@ int main(){
 	
 	char opcion;
 	do{
+		
 		cout << "Elige el tipo de metodo de ordenacion" << endl << endl;
 		cout << "1. Metodos directos (n^2)" << endl;
 		cout << "2. Metodos logaritmicos (n x log n)" << endl;
@@ -159,6 +211,7 @@ int main(){
 		switch(opcion){
 			case '1':
 				do{
+					bool mostrarPasos=true;
 					system("cls");
 					cout << endl << "Elige un metodo directo" << endl << endl;
 					cout << "A) Ordenacion por intercambio directo" << endl;
@@ -171,6 +224,7 @@ int main(){
 					switch(opcion){
 						case 'A':
 							do{
+								mostrarPasos=true;
 								system("cls");	
 								cout << "Elige que tipo de intercambio directo" << endl << endl;
 								cout << "a) Intercambio directo por la derecha" << endl;
@@ -181,9 +235,11 @@ int main(){
 								cin >> opcion;
 								
 								system("cls");
-								cout << "Antes" << endl << endl << "\t";
-								imprimir(arregloOriginal, tamanio);
-								cout << endl << endl << "Proceso" << endl << endl;
+								if(opcion == 'a' || opcion == 'b' || opcion == 'c' || opcion == 'd'){
+									cout << "Antes" << endl << endl << "\t";
+									imprimir(arregloOriginal, tamanio);
+									cout << endl << endl << "Proceso" << endl << endl;
+								}
 								switch(opcion){
 									case 'a':
 										intercambioDirectoDerecha(arregloCopia, tamanio);
@@ -198,34 +254,58 @@ int main(){
 										intercambioDirectoBidireccional(arregloCopia, tamanio);
 										break;
 									case 'e':
+										mostrarPasos = false;
 										cout << endl << "Volviendo al menu anterior..." << endl << endl;
 										break;
 									default:
+										mostrarPasos = false;
 										cout << endl << "No valido." << endl << endl;
 										break;
 								}
-								cout << endl << endl << "Despues" << endl << endl << "\t";
-								imprimir(arregloCopia, tamanio);
-								cout << endl << endl;
-								change(arregloCopia, arregloOriginal,tamanio);
+								if(mostrarPasos){
+									cout << endl << endl << "Despues" << endl << endl << "\t";
+									imprimir(arregloCopia, tamanio);
+									cout << endl << endl;
+									change(arregloCopia, arregloOriginal,tamanio);
+								}
 								system("pause");
 							} while(opcion!='e');
 							break;
 						case 'B':
+							system("cls");
+							cout << "Antes" << endl << endl << "\t";
+							imprimir(arregloOriginal, tamanio);
+							cout << endl << endl << "Proceso" << endl << endl;	
+							MetodoDirectoSeleccionDirecta(arregloCopia, tamanio);
 							break;
 						case 'C':
+							system("cls");
+							cout << "Antes" << endl << endl << "\t";
+							imprimir(arregloOriginal, tamanio);
+							cout << endl << endl << "Proceso" << endl << endl;	
+							MetodoDirectoInsercionDirecta(arregloCopia, tamanio); 
 							break;
 						case 'D':
+							mostrarPasos = false;
 							cout << endl << "Volviendo al menu anterior..." << endl << endl;
 							break;
 						default:
+							mostrarPasos = false;
 							cout << endl << "No valido." << endl << endl;
 							break;
 					}
+					if(mostrarPasos){
+						cout << endl << endl << "Despues" << endl << endl << "\t";
+						imprimir(arregloCopia, tamanio);
+						cout << endl << endl;
+						change(arregloCopia, arregloOriginal,tamanio);
+					}
+					system("pause");
 				} while(opcion != 'D');
 				break;
 			case '2':
 				do{
+					mostrarPasos = true;
 					system("cls");
 					cout << endl << "Elige un metodo logaritmico" << endl << endl;
 					cout << "a) Metodo de Shell" << endl;
@@ -233,18 +313,32 @@ int main(){
 					cout << "c) Salir" << endl << endl;
 					cin >> opcion;
 					
-					
+					system("cls");
+					if(opcion == 'a' || opcion == 'b'){
+						cout << "Antes" << endl << endl << "\t";
+						imprimir(arregloOriginal, tamanio);
+						cout << endl << endl << "Proceso" << endl << endl;
+					}
 					switch(opcion){
 						case 'a':
+							metodoLogaritmicoShellSort(arregloCopia, tamanio);
 							break;
 						case 'b':
 							break;
 						case 'c':
+							mostrarPasos = false;
 							cout << endl << "Volviendo al menu anterior..." << endl << endl;
 							break;
 						default:
+							mostrarPasos = false;
 							cout << endl << "No valido." << endl << endl;
 							break;
+					}
+					if(mostrarPasos){
+						cout << endl << endl << "Despues" << endl << endl << "\t";
+						imprimir(arregloCopia, tamanio);
+						cout << endl << endl;
+						change(arregloCopia, arregloOriginal, tamanio);
 					}
 				} while(opcion != 'c');
 				break;
@@ -255,6 +349,7 @@ int main(){
 				cout << endl << "No valido." << endl << endl;
 				break;
 		}
+		system("cls");
 	} while(opcion != '3');
 	cout << endl << "Saliendo del programa..." << endl;
 	return 0;

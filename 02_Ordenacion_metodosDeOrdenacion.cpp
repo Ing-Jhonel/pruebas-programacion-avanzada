@@ -5,22 +5,34 @@ using namespace std;
 
 HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
 
-void imprimirArreglo(double a[], int n, int k){
+void imprimirArreglo(double a[], int n, int k, char s){
 	
 	int i=0;
-	color(hConsole, 10);	
-	for(; i<n-k; i++){ // imprime los primeros n-k elementos (verde)
-		cout << a[i] << " ";
+	if(s=='d'){
+		color(hConsole, 10);	
+		for(; i<n-k; i++){ // imprime los primeros n-k elementos (verde)
+			cout << a[i] << " ";
+		}
+	
+		color(hConsole, 4);
+		for(; i<n; i++){ // imprime lo que falta por imprimir del arreglo (rojo)
+			cout << a[i] << " ";
+		}
+	} else if(s=='i'){
+		color(hConsole, 4);	
+		for(; i<k-1; i++){ // imprime los primeros n-k elementos (verde)
+			cout << a[i] << " ";
+		}
+	
+		color(hConsole, 10);
+		for(; i<n; i++){ // imprime lo que falta por imprimir del arreglo (rojo)
+			cout << a[i] << " ";
+		}
 	}
 	
-	color(hConsole, 4);
-	for(; i<n; i++){ // imprime lo que falta por imprimir del arreglo (rojo)
-		cout << a[i] << " ";
-	}
 	
 	color(hConsole, 7);
 }
-
 void imprimir(double a[], int n){
 	
 	for(int i=0; i<n; i++){ 
@@ -40,14 +52,14 @@ void intercambioDirectoDerecha(double a[], int n){
 	for(int i=0; i<n-1; i++){
 		cout << endl << "Izquierda a derecha (" << 0 << " --> " << n-i-1 << ")" << endl << endl; 
 		for(j=0; j<n-i-1; j++){
-			imprimirArreglo(a, n, i); cout << endl;
+			imprimirArreglo(a, n, i, 'd'); cout << endl;
 			if(a[j]>a[j+1]){
 				double aux = a[j];
 				a[j] = a[j+1];
 				a[j+1] = aux;
 			}
 		}
-		imprimirArreglo(a, n, i); cout << endl << endl;
+		imprimirArreglo(a, n, i, 'd'); cout << endl << endl;
 	}
 }
 
@@ -55,43 +67,43 @@ void intercambioDirectoIzquierda(double a[], int n){
 	
 	int j=0;
 	for(int i=0; i<n-1; i++){
-		cout << endl << "Derecha a Izquierda (" << n-i-i << " --> " << 0 << ")" << endl << endl;
+		cout << endl << "Derecha a Izquierda (" << n-i-1 << " --> " << 0 << ")" << endl << endl;
 		for(j=n-1; j>i; j--){
-			imprimirArreglo(a, n, i); cout << endl;
+			imprimirArreglo(a, n, i+1, 'i'); cout << endl;
 			if(a[j]<a[j-1]){
 				double aux = a[j];
 				a[j] = a[j-1];
 				a[j-1] = aux;
 			}
 		}
-		imprimirArreglo(a, n, i); cout << endl << " sdsd"<< endl;
+		imprimirArreglo(a, n, i+1, 'i'); cout << endl << endl;
 	}
 }
 
 void intercambioDirectoSenial(double a[], int n){
     bool intercambio;
     
-    int j;
-    imprimirArreglo(a, n, 0); cout << endl;
-    for(int i=0; i<n-1; i++){
+    int j, i;
+    imprimirArreglo(a, n, 0, 's'); cout << endl;
+    for(i=0; i<n-1; i++){
     	cout << endl << "Izquierda a derecha (" << 0 << " --> " << n-i-1 << ")"<< endl << endl;
         intercambio = false;
         for(j=0; j<n-i; j++){
+        	imprimirArreglo(a, n, i, 'd'); cout << endl;
             if(a[j] > a[j+1]){
                 int aux = a[j];
                 a[j] = a[j+1];
                 a[j+1] = aux;
                 intercambio = true;
-                imprimirArreglo(a, n, 0); cout << endl;
             }
         }
         if(!intercambio){
         	break;	
 		}
     }
-    imprimirArreglo(a, n, 0); cout << endl;
 }
 
+/*
 void intercambioDirectoBidireccional(double a[], int n) { //va de izquierda a drecha mientras ordena y se devuelve pero se resta -1 al fin, y luego -1 al inicio y asi, hasta llegar al medio, hbiendo ordenado todo
     int inicio = 0;
     int fin = n-1;
@@ -107,7 +119,7 @@ void intercambioDirectoBidireccional(double a[], int n) { //va de izquierda a dr
                 a[i] = a[i+1];
                 a[i+1] = aux;
                 intercambio = true;
-                imprimirArreglo(a, n, 0); cout << endl;
+                imprimirArreglo(a, n, 0, 'b'); cout << endl;
             }
         }
         fin--;
@@ -122,12 +134,40 @@ void intercambioDirectoBidireccional(double a[], int n) { //va de izquierda a dr
                 a[i] = a[i-1];
                 a[i-1] = aux;
                 intercambio = true;
-                imprimirArreglo(a, n, 0); cout << endl;
+                imprimirArreglo(a, n, 0, 'b'); cout << endl;
             }
         }
         inicio++;
 
     } while (inicio <= fin);
+}*/
+
+void intercambioDirectoBidireccional(double a[], int n){
+	int izq=0;
+	int der=n-1;
+	int k=n;
+	
+	while(izq<=der){//para que ambas partes de la mitad se hallan recorrido
+		for(int i=der; i>izq; i--){ //  |izq=0			n=der|
+			if(a[i-1]>a[i]){
+				double aux=a[i-1];
+				a[i-1]=a[i];
+				a[i]=aux;
+				k=i; //cantidad de elementos ordenados en la izq
+			}
+		}
+		izq=k;
+		
+		for(int i=izq; i<der; i++){ //  |izq=0			n=der|
+			if(a[i]>a[i+1]){
+				double aux = a[i];
+                a[i] = a[i + 1];
+                a[i + 1] = aux;
+				k=i;//cantidad de elementos ordenados en la der
+			}
+		}
+		der=k-1;
+	}
 }
 
 void MetodoDirectoSeleccionDirecta(double a[], int n){
@@ -181,6 +221,7 @@ void metodoLogaritmicoShellSort(double a[], int n){
 		}
 	}
 }
+
 
 
 void reduce(double a[], int inicio, int final){
@@ -267,6 +308,7 @@ int main(){
 					switch(opcion){
 						case 'A':
 							do{
+								system("cls");
 								mostrarPasos=true;	
 								cout << "Elige que tipo de intercambio directo" << endl << endl;
 								cout << "a) Intercambio directo por la derecha" << endl;
